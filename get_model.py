@@ -82,7 +82,7 @@ class Model(nn.Module):
         print('weight for location, depth, vel, vel_ratio', self.weight)
         
 
-
+    #misfit function
     def compute_loss(self, out, target):
         loss_loc = self.weight[0] * torch.mul(out[:,:3]-target[:,:3], out[:,:3]-target[:,:3])
         loss_depth = self.weight[1] * torch.mul(out[:,3:11]-target[:,3:11], out[:,3:11]-target[:,3:11])

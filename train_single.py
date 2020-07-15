@@ -25,9 +25,12 @@ import torch
 import torch.utils.data
 from torch import nn
 
+
+
 os.environ['CUDA_VISIBLE_DEVICES'] = '2,3'
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 print(device)
+#the weith for location, depth, velocity, ratio
 weight=(1.0,1.0,1.0,10000.0)
 
 
@@ -43,7 +46,6 @@ def main(args):
     datasets = LoadData('./train/',train=True)
     dataset_test =  LoadData('./test/',train=False)
     print("Creating data loaders")
-
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(datasets)
         test_sampler = torch.utils.data.distributed.DistributedSampler(dataset_test)
@@ -60,8 +62,10 @@ def main(args):
     data_loader_test = torch.utils.data.DataLoader(
         dataset_test, batch_size=1,
         sampler=test_sampler, num_workers=args.workers)
-    print("Creating model")
 
+
+    #model code
+    print("Creating model")
     #print(next(iter(data_loader)))
     model = getM(dropout=None, weight=weight)
     model.to(device)
@@ -113,18 +117,27 @@ def main(args):
     print('Training time {}'.format(total_time_str))
 
 
+
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description='PyTorch Detection Training')
     parser.add_argument('--device', default='cuda', help='device')
+    # batch size per gpu
     parser.add_argument('-b', '--batch-size', default=8, type=int)
+    # total epoch
     parser.add_argument('--epochs', default=10, type=int, metavar='N',
                         help='number of total epochs to run')
+    #threads for reading data
     parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                         help='number of data loading workers (default: 16)')
+    #inital learning rate
     parser.add_argument('--lr', default=0.01, type=float, help='initial learning rate')
+    #learning rete schedule based on epoch
     parser.add_argument('--lr-step-size', default=[5,9], type=int, help='decrease lr every step-size epochs')
+    #learning rate decay by 0.1 in 5 and 9, you can define your own parameters
     parser.add_argument('--lr-gamma', default=0.1, type=float, help='decrease lr by a factor of lr-gamma')
+    #the frequency of print
     parser.add_argument('--print-freq', default=100, type=int, help='print frequency')
     parser.add_argument('--output-dir', default='./model/', help='path where to save')
     parser.add_argument('--resume', default='', help='resume from checkpoint')
@@ -135,6 +148,7 @@ if __name__ == "__main__":
         action="store_true",
     )
     # distributed training parameters
+    # this parameter should change with the number of  gpus
     parser.add_argument('--world-size', default=2, type=int,
                         help='number of distributed processes')
     parser.add_argument('--dist-url', default='env://', help='url used to set up distributed training')

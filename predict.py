@@ -17,7 +17,7 @@ from torch import nn
 
 
 model_dir = './model/mode_9.pth'
-data_dir = './test/'
+data_dir = './predict/'
 os.environ['CUDA_VISIBLE_DEVICES']='2'
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 weight=(1.0,1.0,1.0,100.0)
