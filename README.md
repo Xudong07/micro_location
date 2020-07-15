@@ -13,4 +13,8 @@
 ./model放模型
 
 
-#
+# run   
+python3 -m torch.distributed.launch --nproc_per_node=2 --use_env train_single.py
+
+# kill process   
+ps -ef | grep python | grep $yourusrname | awk '{print $2}'  | xargs kill -9

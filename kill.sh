@@ -1,2 +1,2 @@
 set -e
-ps -ef | grep python | grep duanxd | awk '{print $2}'  | xargs kill -9
+ps -ef | grep python | grep mayy | awk '{print $2}'  | xargs kill -9
